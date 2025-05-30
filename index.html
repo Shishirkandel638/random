@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shishir Kandel - Graphic Designer</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 0;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #6f42c1;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: #6f42c1;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 0;
+            background-color: #f8f9fa;
+        }
+        
+        .hero-avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            background-color: #6f42c1;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #6c757d;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+        
+        /* Sections */
+        section {
+            padding: 6rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .section-divider {
+            width: 80px;
+            height: 4px;
+            background-color: #6f42c1;
+            margin: 0 auto 1.5rem;
+            border-radius: 2px;
+        }
+        
+        /* About Section */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .about-image {
+            background-color: #f1e8ff;
+            border-radius: 20px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .about-image i {
+            font-size: 8rem;
+            color: #6f42c1;
+        }
+        
+        /* Career Section */
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .career-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 2rem;
+            transition: transform 0.3s;
+            border-left: 4px solid #6f42c1;
+        }
+        
+        .career-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .career-card h3 {
+            color: #6f42c1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .career-card .salary {
+            background-color: #e9d8fd;
+            color: #6f42c1;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+            font-weight: 600;
+        }
+        
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .skill-tag {
+            background-color: #f1e8ff;
+            color: #6f42c1;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        /* Contact Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+        
+        .contact-form {
+            background-color: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .submit-btn {
+            background-color: #6f42c1;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #5936a9;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            background-color: #f8f9fa;
+            color: #6c757d;
+        }
+        
+        /* Button and Link Styles */
+        .btn-primary {
+            background: #6f42c1;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+            box-shadow: 0 4px 16px 0 rgba(177, 78, 228, 0.2);
+            display: inline-block;
+            margin: 0 0.5rem;
+        }
+        
+        .btn-primary:hover {
+            background: #5936a9;
+        }
+        
+        .btn-outline {
+            background: #fff;
+            color: #6f42c1;
+            border: 2px solid #6f42c1;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-block;
+            margin: 0 0.5rem;
+        }
+        
+        .btn-outline:hover {
+            background: #6f42c1;
+            color: #fff;
+        }
+        
+        /* Social Icons */
+        .social-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .social-link {
+            color: #6c757d;
+            font-size: 1.25rem;
+            transition: all 0.2s;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1e8ff;
+        }
+        
+        .social-link:hover {
+            color: #6f42c1;
+            transform: translateY(-3px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .about-grid,
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn-primary, .btn-outline {
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin: 0.5rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">Shishir Kandel</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#career">Career Paths</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container hero-content">
+            <div class="hero-avatar">SK</div>
+            <h1 class="hero-title">Hi, I'm <span style="color:#b14ee4;">Shishir Kandel</span></h1>
+            <p class="hero-subtitle">Creative Graphic Designer crafting exceptional visual experiences with modern design tools and creative solutions</p>
+            <div class="hero-buttons">
+                <a href="#career" class="btn-primary">View Career Roadmap</a>
+                <a href="#contact" class="btn-outline">Get In Touch</a>
+            </div>
+            <div class="social-container">
+                <a href="https://www.facebook.com/shishir.kandel.29" target="_blank" aria-label="Facebook" class="social-link">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/the_shishir.kandel/" target="_blank" aria-label="Instagram" class="social-link">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/shishirkandel/" target="_blank" aria-label="LinkedIn" class="social-link">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://www.behance.net/theshishirkandel" target="_blank" aria-label="Behance" class="social-link">
+                    <i class="fab fa-behance"></i>
+                </a>
+                <a href="https://github.com/Shishirkdl" target="_blank" aria-label="GitHub" class="social-link">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>About Me</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="about-grid">
+                <div class="about-image">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="about-content">
+                    <p>I'm a passionate graphic designer with over 5 years of experience creating visually stunning designs that communicate brand messages effectively. My expertise spans across branding, digital illustrations, UI/UX design, and print media.</p>
+                    <p>I believe in the power of design to transform ideas into impactful visual stories. My approach combines creativity with strategic thinking to deliver designs that are not only beautiful but also functional and user-friendly.</p>
+                    
+                    <div class="about-stats">
+                        <h3 style="margin: 2rem 0 1rem;">My Skills</h3>
+                        <div class="skills-list">
+                            <span class="skill-tag">Photoshop</span>
+                            <span class="skill-tag">Illustrator</span>
+                            <span class="skill-tag">InDesign</span>
+                            <span class="skill-tag">Typography</span>
+                            <span class="skill-tag">Color Theory</span>
+                            <span class="skill-tag">Branding</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Career Section -->
+    <section id="career" class="career">
+        <div class="container">
+            <div class="section-title">
+                <h2>Career Opportunities in Nepal</h2>
+                <div class="section-divider"></div>
+                <p>Explore different career paths in technology and digital fields with growth opportunities in Nepal</p>
+            </div>
+            <div class="career-grid">
+                <div class="career-card">
+                    <h3>Graphic Design</h3>
+                    <p>Create visual content for digital and print media, including logos, brochures, advertisements, and brand identity materials.</p>
+                    
+                    <div class="skills-list">
+                        <span class="skill-tag">Photoshop</span>
+                        <span class="skill-tag">Illustrator</span>
+                        <span class="skill-tag">InDesign</span>
+                        <span class="skill-tag">Typography</span>
+                        <span class="skill-tag">Color Theory</span>
+                        <span class="skill-tag">Branding</span>
+                    </div>
+                    
+                    <div class="salary">Rs 25,000 - 80,000/month</div>
+                    <p><strong>Time to Learn:</strong> 6-12 months</p>
+                    <a href="#contact" class="btn-outline" style="margin-top: 1rem; display: inline-block;">Learn More</a>
+                </div>
+                
+                <div class="career-card">
+                    <h3>Cyber Security</h3>
+                    <p>Protect organizations from digital threats by implementing security measures, monitoring networks, and responding to cyber attacks.</p>
+                    
+                    <div class="skills-list">
+                        <span class="skill-tag">Network Security</span>
+                        <span class="skill-tag">Ethical Hacking</span>
+                        <span class="skill-tag">Risk Assessment</span>
+                        <span class="skill-tag">Incident Response</span>
+                        <span class="skill-tag">Compliance</span>
+                    </div>
+                    
+                    <div class="salary">Rs 40,000 - 120,000/month</div>
+                    <p><strong>Time to Learn:</strong> 12-18 months</p>
+                    <a href="#contact" class="btn-outline" style="margin-top: 1rem; display: inline-block;">Learn More</a>
+                </div>
+                
+                <div class="career-card">
+                    <h3>Networking</h3>
+                    <p>Design, implement, and maintain computer networks to ensure reliable connectivity and communication within organizations.</p>
+                    
+                    <div class="skills-list">
+                        <span class="skill-tag">TCP/IP</span>
+                        <span class="skill-tag">Routing</span>
+                        <span class="skill-tag">Switching</span>
+                        <span class="skill-tag">Network Protocols</span>
+                        <span class="skill-tag">Security</span>
+                    </div>
+                    
+                    <div class="salary">Rs 30,000 - 90,000/month</div>
+                    <p><strong>Time to Learn:</strong> 8-15 months</p>
+                    <a href="#contact" class="btn-outline" style="margin-top: 1rem; display: inline-block;">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Get In Touch</h2>
+                <div class="section-divider"></div>
+                <p>Let's discuss your project!</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Let's Connect</h3>
+                    <p>Whether you have a project in mind, want to collaborate, or just want to say hello, I'd love to hear from you. Let's create something amazing together!</p>
+                    
+                    <div class="contact-details" style="margin-top: 2rem;">
+                        <p style="margin-bottom: 1rem;"><i class="fas fa-envelope" style="color: #6f42c1; width: 20px;"></i> shishirxkandel@gmail.com</p>
+                        <p style="margin-bottom: 1rem;"><i class="fas fa-phone" style="color: #6f42c1; width: 20px;"></i> +977 9848960692</p>
+                        <p><i class="fas fa-map-marker-alt" style="color: #6f42c1; width: 20px;"></i> Bharatpur, Nepal</p>
+                    </div>
+                    
+                    <div class="social-container" style="justify-content: flex-start; margin-top: 2rem;">
+                        <a href="https://www.facebook.com/shishir.kandel.29" target="_blank" aria-label="Facebook" class="social-link">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/the_shishir.kandel/" target="_blank" aria-label="Instagram" class="social-link">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/shishirkandel/" target="_blank" aria-label="LinkedIn" class="social-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="https://www.behance.net/theshishirkandel" target="_blank" aria-label="Behance" class="social-link">
+                            <i class="fab fa-behance"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h3>Send Message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required placeholder="Your Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required placeholder="your@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required placeholder="Project Discussion">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" required placeholder="Tell me about your project..." rows="5"></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025%+ Shishir Kandel. All rights reserved. | Design & Development by Shishir Kandel</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple form handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! I will get back to you soon.');
+            this.reset();
+        });
+        
+        // Basic theme toggle
+        const themeToggle = document.querySelector('.theme-toggle');
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-theme');
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('dark-theme')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+                document.body.style.backgroundColor = '#1a1a1a';
+                document.body.style.color = '#f8f9fa';
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+                document.body.style.backgroundColor = '#fff';
+                document.body.style.color = '#333';
+            }
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        mobileMenuBtn.addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+        
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.nav-links').style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
