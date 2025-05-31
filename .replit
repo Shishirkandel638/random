@@ -1,0 +1,10 @@
+run = "node backend/server.js"
+
+[env]
+PORT = "5000"
+
+[nix]
+channel = "stable-22_11"
+
+[deployment]
+run = ["sh", "-c", "node backend/server.js"]

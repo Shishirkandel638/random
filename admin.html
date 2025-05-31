@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline';">
+    <title>Admin Panel - Portfolio Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #0f172a;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 10vh auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-form h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #0f172a;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #6f42c1;
+            box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .code-editor textarea {
+            min-height: 400px;
+        }
+
+        .btn {
+            background: #6f42c1;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #5936a9;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-success {
+            background: #10b981;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-card h3 {
+            margin-bottom: 1.5rem;
+            color: #0f172a;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .file-upload {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            transition: border-color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: #6f42c1;
+        }
+
+        .file-upload.dragover {
+            border-color: #6f42c1;
+            background: #f3e8ff;
+        }
+
+        .file-list, .career-list, .social-links-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .file-item, .career-item, .social-link-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .file-item:last-child, .career-item:last-child, .social-link-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .contact-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #6f42c1;
+        }
+
+        .contact-item.unread {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .contact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .contact-date {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .contact-subject {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-message {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .contact-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            font-weight: 500;
+            max-width: 300px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #10b981;
+            color: white;
+        }
+
+        .notification.error {
+            background: #ef4444;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            border: none;
+            font-weight: 500;
+            color: #6b7280;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: #6f42c1;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #6f42c1;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="login-container" class="login-container">
+        <form id="login-form" class="login-form">
+            <h2><i class="fas fa-shield-alt"></i> Admin Login</h2>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter admin username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter admin password">
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <p id="login-error" class="hidden" style="color: #ef4444; text-align: center; margin-top: 1rem;"></p>
+        </form>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="hidden">
+        <div class="container">
+            <!-- Header -->
+            <div class="header">
+                <h1><i class="fas fa-cog"></i> Portfolio Admin Panel</h1>
+                <button id="logout-btn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-contacts">0</div>
+                    <div class="stat-label">Total Messages</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="unread-contacts">0</div>
+                    <div class="stat-label">Unread Messages</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-files">0</div>
+                    <div class="stat-label">Uploaded Files</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-careers">0</div>
+                    <div class="stat-label">Career Items</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="content">
+                    <i class="fas fa-edit"></i> Content Editor
+                </button>
+                <button class="tab" data-tab="career">
+                    <i class="fas fa-briefcase"></i> Career Manager
+                </button>
+                <button class="tab" data-tab="social">
+                    <i class="fas fa-link"></i> Social Links
+                </button>
+                <button class="tab" data-tab="files">
+                    <i class="fas fa-images"></i> File Manager
+                </button>
+                <button class="tab" data-tab="contacts">
+                    <i class="fas fa-envelope"></i> Messages
+                </button>
+                <button class="tab" data-tab="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+                <button class="tab" data-tab="code">
+                    <i class="fas fa-code"></i> Code Editor
+                </button>
+            </div>
+
+            <!-- Content Editor Tab -->
+            <div id="content-tab" class="tab-content active">
+                <div class="admin-grid">
+                    <!-- Site Settings -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-globe"></i> Site Settings</h3>
+                        <form id="site-settings-form">
+                            <div class="form-group">
+                                <label for="site-title">Site Title</label>
+                                <input type="text" id="site-title" name="siteTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="logo-text">Logo Text</label>
+                                <input type="text" id="logo-text" name="logo" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="theme">Default Theme</label>
+                                <select id="theme" name="theme">
+                                    <option value="light">Light</option>
+                                    <option value="dark">Dark</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn">Save Settings</button>
+                        </form>
+                    </div>
+
+                    <!-- Hero Section -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-star"></i> Hero Section</h3>
+                        <form id="hero-form">
+                            <div class="form-group">
+                                <label for="hero-title">Title</label>
+                                <input type="text" id="hero-title" name="title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hero-subtitle">Subtitle</label>
+                                <textarea id="hero-subtitle" name="subtitle" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="hero-career-btn-text">Career Button Text</label>
+                                <input type="text" id="hero-career-btn-text" name="careerBtnText" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hero-contact-btn-text">Contact Button Text</label>
+                                <input type="text" id="hero-contact-btn-text" name="contactBtnText" required>
+                            </div>
+                            <button type="submit" class="btn">Save Hero</button>
+                        </form>
+                    </div>
+
+                    <!-- About Section -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-user"></i> About Section</h3>
+                        <form id="about-form">
+                            <div class="form-group">
+                                <label for="about-title">Title</label>
+                                <input type="text" id="about-title" name="title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="about-content">Content</label>
+                                <textarea id="about-content" name="content" required rows="6"></textarea>
+                            </div>
+                            <button type="submit" class="btn">Save About</button>
+                        </form>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-address-book"></i> Contact Information</h3>
+                        <form id="contact-form">
+                            <div class="form-group">
+                                <label for="contact-title">Contact Title</label>
+                                <input type="text" id="contact-title" name="title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-subtitle">Contact Subtitle</label>
+                                <textarea id="contact-subtitle" name="subtitle" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">Email</label>
+                                <input type="email" id="contact-email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-phone">Phone</label>
+                                <input type="text" id="contact-phone" name="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-location">Location</label>
+                                <input type="text" id="contact-location" name="location" required>
+                            </div>
+                            <button type="submit" class="btn">Save Contact</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Career Manager Tab -->
+            <div id="career-tab" class="tab-content">
+                <div class="admin-grid">
+                    <!-- Add Career Item -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-briefcase"></i> Add Career Item</h3>
+                        <form id="career-form">
+                            <div class="form-group">
+                                <label for="career-item-title">Title</label>
+                                <input type="text" id="career-item-title" name="title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="career-item-description">Description</label>
+                                <textarea id="career-item-description" name="description" required rows="4"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="career-item-date">Date</label>
+                                <input type="text" id="career-item-date" name="date" required placeholder="e.g., Jan 2023 - Present">
+                            </div>
+                            <button type="submit" class="btn">Add Career Item</button>
+                        </form>
+                    </div>
+
+                    <!-- Career List -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-list"></i> Career Items</h3>
+                        <div class="career-list" id="career-list">
+                            <p style="text-align: center; color: #6b7280;">Loading career items...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Links Tab -->
+            <div id="social-tab" class="tab-content">
+                <div class="admin-grid">
+                    <!-- Add Social Link -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-link"></i> Add/Update Social Link</h3>
+                        <form id="social-form">
+                            <div class="form-group">
+                                <label for="social-id">Social Link ID (leave blank for new link)</label>
+                                <input type="text" id="social-id" name="id" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="social-platform">Platform</label>
+                                <select id="social-platform" name="platform" required>
+                                    <option value="facebook">Facebook</option>
+                                    <option value="twitter">Twitter</option>
+                                    <option value="linkedin">LinkedIn</option>
+                                    <option value="instagram">Instagram</option>
+                                    <option value="behance">Behance</option>
+                                    <option value="github">GitHub</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="social-url">URL</label>
+                                <input type="url" id="social-url" name="url" required>
+                            </div>
+                            <button type="submit" class="btn" id="social-submit-btn">Add Social Link</button>
+                        </form>
+                    </div>
+
+                    <!-- Social Links List -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-list"></i> Social Links</h3>
+                        <div class="social-links-list" id="social-links-list">
+                            <p style="text-align: center; color: #6b7280;">Loading social links...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Manager Tab -->
+            <div id="files-tab" class="tab-content">
+                <div class="admin-grid">
+                    <!-- File Upload -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-cloud-upload-alt"></i> Upload Files</h3>
+                        <div class="file-upload" id="file-upload">
+                            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #6b7280; margin-bottom: 1rem;"></i>
+                            <p>Drag and drop files here or click to select</p>
+                            <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
+                        </div>
+                        <div id="upload-progress" class="hidden" style="margin-top: 1rem;">
+                            <div style="background: #e5e7eb; border-radius: 0.5rem; overflow: hidden;">
+                                <div id="progress-bar" style="background: #6f42c1; height: 8px; width: 0%; transition: width 0.3s ease;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File List -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-folder"></i> Uploaded Files</h3>
+                        <div class="file-list" id="file-list">
+                            <p style="text-align: center; color: #6b7280;">Loading files...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Tab -->
+            <div id="contacts-tab" class="tab-content">
+                <div class="admin-grid">
+                    <!-- Add/Edit Contact -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-envelope"></i> Add/Edit Contact Message</h3>
+                        <form id="contact-message-form">
+                            <div class="form-group">
+                                <label for="contact-id">Contact ID (leave blank for new message)</label>
+                                <input type="text" id="contact-id" name="id" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-name">Name</label>
+                                <input type="text" id="contact-name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">Email</label>
+                                <input type="email" id="contact-email-field" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-subject">Subject</label>
+                                <input type="text" id="contact-subject" name="subject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message-field">Message</label>
+                                <textarea id="contact-message-field" name="message" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-timestamp">Timestamp</label>
+                                <input type="text" id="contact-timestamp" name="timestamp" readonly>
+                            </div>
+                            <button type="submit" class="btn" id="contact-submit-btn">Add Contact Message</button>
+                        </form>
+                    </div>
+
+                    <!-- Contact List -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-list"></i> Contact Messages</h3>
+                        <div class="contact-list" id="contact-list">
+                            <p style="text-align: center; color: #6b7280;">Loading messages...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <div class="admin-card">
+                    <h3><i class="fas fa-tools"></i> System Settings</h3>
+                    <div class="form-group">
+                        <button class="btn btn-secondary" onclick="exportContent()">
+                            <i class="fas fa-download"></i> Export Content
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-danger" onclick="clearAllData()">
+                            <i class="fas fa-trash"></i> Clear All Data
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success" onclick="previewContent()">
+                            <i class="fas fa-eye"></i> Preview Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Editor Tab -->
+            <div id="code-tab" class="tab-content">
+                <div class="admin-card code-editor">
+                    <h3><i class="fas fa-code"></i> Code Editor (index.html)</h3>
+                    <form id="code-form">
+                        <div class="form-group">
+                            <label for="index-code">Index.html Code</label>
+                            <textarea id="index-code" name="code" required></textarea>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button type="submit" class="btn" style="flex: 1;">Save Code</button>
+                            <button type="button" class="btn btn-danger" onclick="deleteIndexCode()" style="flex: 1;">Delete Code</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Global variables
+        let authToken = localStorage.getItem('admin_token');
+        let siteContent = null;
+        let indexCode = null;
+        let failedLoginAttempts = 0;
+        const MAX_LOGIN_ATTEMPTS = 5;
+        const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes in milliseconds
+        const API_BASE = window.location.origin.replace(/:\d+/, ':5000'); // Adjust to match PORT=5000
+
+        // Initialize admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            if (authToken) {
+                validateToken();
+                startSessionTimeout();
+            } else {
+                showLogin();
+            }
+
+            initializeEventListeners();
+        });
+
+        // Session timeout
+        let timeoutId;
+        function startSessionTimeout() {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(handleLogout, SESSION_TIMEOUT);
+        }
+
+        function resetSessionTimeout() {
+            startSessionTimeout();
+        }
+
+        // Event listeners
+        function initializeEventListeners() {
+            // Login form
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', handleLogout);
+            
+            // Tab switching
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchTab(tab.dataset.tab);
+                    resetSessionTimeout();
+                });
+            });
+
+            // Forms
+            document.getElementById('site-settings-form').addEventListener('submit', saveSiteSettings);
+            document.getElementById('hero-form').addEventListener('submit', saveHeroSection);
+            document.getElementById('about-form').addEventListener('submit', saveAboutSection);
+            document.getElementById('contact-form').addEventListener('submit', saveContactInfo);
+            document.getElementById('career-form').addEventListener('submit', addCareerItem);
+            document.getElementById('social-form').addEventListener('submit', saveSocialLink);
+            document.getElementById('code-form').addEventListener('submit', saveIndexCode);
+            document.getElementById('contact-message-form').addEventListener('submit', saveContactMessage);
+
+            // File upload
+            const fileUpload = document.getElementById('file-upload');
+            const fileInput = document.getElementById('file-input');
+            
+            fileUpload.addEventListener('click', () => fileInput.click());
+            fileUpload.addEventListener('dragover', handleDragOver);
+            fileUpload.addEventListener('drop', handleFileDrop);
+            fileInput.addEventListener('change', handleFileSelect);
+
+            // Reset session timeout on user activity
+            document.addEventListener('click', resetSessionTimeout);
+            document.addEventListener('keypress', resetSessionTimeout);
+        }
+
+        // Input sanitization
+        function sanitizeInput(input) {
+            const div = document.createElement('div');
+            div.textContent = input;
+            return div.innerHTML.replace(/[<>"'&]/g, '');
+        }
+
+        // Authentication
+        async function handleLogin(e) {
+            e.preventDefault();
+            if (failedLoginAttempts >= MAX_LOGIN_ATTEMPTS) {
+                showNotification('Too many failed attempts. Please try again later.', 'error');
+                return;
+            }
+
+            const username = sanitizeInput(document.getElementById('username').value);
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                showNotification('Username and password are required.', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Invalid credentials');
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Unexpected response format: Server did not return JSON');
+                }
+
+                const result = await response.json();
+
+                if (result.token) {
+                    authToken = result.token;
+                    localStorage.setItem('admin_token', authToken);
+                    failedLoginAttempts = 0;
+                    showDashboard();
+                    showNotification('Login successful', 'success');
+                    startSessionTimeout();
+                } else {
+                    throw new Error('No token received from server');
+                }
+            } catch (error) {
+                failedLoginAttempts++;
+                document.getElementById('login-error').textContent = error.message;
+                document.getElementById('login-error').classList.remove('hidden');
+                showNotification(error.message.includes('<!DOCTYPE') ? 'Server error: Unexpected HTML response. Please check backend configuration.' : error.message, 'error');
+            }
+        }
+
+        async function validateToken() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/get-content`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (response.ok) {
+                    showDashboard();
+                } else {
+                    throw new Error('Invalid token');
+                }
+            } catch (error) {
+                localStorage.removeItem('admin_token');
+                authToken = null;
+                showLogin();
+                showNotification('Session expired. Please log in again.', 'error');
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('admin_token');
+            authToken = null;
+            clearTimeout(timeoutId);
+            showLogin();
+            showNotification('Logged out successfully', 'success');
+        }
+
+        // UI Management
+        function showLogin() {
+            document.getElementById('login-container').classList.remove('hidden');
+            document.getElementById('admin-dashboard').classList.add('hidden');
+        }
+
+        function showDashboard() {
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            loadDashboardData();
+            loadIndexCode();
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+
+            if (tabName === 'files') loadFiles();
+            else if (tabName === 'contacts') loadContacts();
+            else if (tabName === 'career') loadCareerItems();
+            else if (tabName === 'social') loadSocialLinks();
+            else if (tabName === 'code') loadIndexCode();
+        }
+
+        // Dashboard data loading
+        async function loadDashboardData() {
+            try {
+                await Promise.all([
+                    loadContent(),
+                    loadStats(),
+                    loadCareerItems(),
+                    loadSocialLinks()
+                ]);
+            } catch (error) {
+                showNotification('Failed to load dashboard data', 'error');
+            }
+        }
+
+        async function loadContent() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/get-content`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load content');
+                
+                siteContent = await response.json();
+                populateContentForms();
+            } catch (error) {
+                showNotification('Failed to load content', 'error');
+            }
+        }
+
+        function populateContentForms() {
+            if (!siteContent) return;
+
+            // Site settings
+            document.getElementById('site-title').value = sanitizeInput(siteContent.siteTitle || '');
+            document.getElementById('logo-text').value = sanitizeInput(siteContent.logo || '');
+            document.getElementById('theme').value = siteContent.theme || 'light';
+
+            // Hero section
+            document.getElementById('hero-title').value = sanitizeInput(siteContent.sections.hero.title || '');
+            document.getElementById('hero-subtitle').value = sanitizeInput(siteContent.sections.hero.subtitle || '');
+            document.getElementById('hero-career-btn-text').value = sanitizeInput(siteContent.sections.hero.careerBtnText || '');
+            document.getElementById('hero-contact-btn-text').value = sanitizeInput(siteContent.sections.hero.contactBtnText || '');
+
+            // About section
+            document.getElementById('about-title').value = sanitizeInput(siteContent.sections.about.title || '');
+            document.getElementById('about-content').value = sanitizeInput(siteContent.sections.about.content || '');
+
+            // Contact info
+            document.getElementById('contact-title').value = sanitizeInput(siteContent.sections.contact.title || '');
+            document.getElementById('contact-subtitle').value = sanitizeInput(siteContent.sections.contact.subtitle || '');
+            document.getElementById('contact-email').value = sanitizeInput(siteContent.sections.contact.info.email || '');
+            document.getElementById('contact-phone').value = sanitizeInput(siteContent.sections.contact.info.phone || '');
+            document.getElementById('contact-location').value = sanitizeInput(siteContent.sections.contact.info.location || '');
+        }
+
+        async function loadStats() {
+            try {
+                const [contactsResponse, filesResponse, careerResponse, socialResponse] = await Promise.all([
+                    fetch(`${API_BASE}/api/admin/contacts`, { headers: { 'Authorization': `Bearer ${authToken}` } }),
+                    fetch(`${API_BASE}/api/admin/files`, { headers: { 'Authorization': `Bearer ${authToken}` } }),
+                    fetch(`${API_BASE}/api/admin/career`, { headers: { 'Authorization': `Bearer ${authToken}` } }),
+                    fetch(`${API_BASE}/api/admin/social-links`, { headers: { 'Authorization': `Bearer ${authToken}` } })
+                ]);
+
+                const contacts = contactsResponse.ok ? await contactsResponse.json() : [];
+                const files = filesResponse.ok ? await filesResponse.json() : [];
+                const careers = careerResponse.ok ? await careerResponse.json() : [];
+                const socialLinks = socialResponse.ok ? await socialResponse.json() : [];
+
+                document.getElementById('total-contacts').textContent = contacts.length;
+                document.getElementById('unread-contacts').textContent = contacts.filter(c => !c.read).length;
+                document.getElementById('total-files').textContent = files.length;
+                document.getElementById('total-careers').textContent = careers.length;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Content management
+        async function saveSiteSettings(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            siteContent.siteTitle = sanitizeInput(formData.get('siteTitle'));
+            siteContent.logo = sanitizeInput(formData.get('logo'));
+            siteContent.theme = formData.get('theme');
+
+            await saveContent('Site settings updated successfully');
+        }
+
+        async function saveHeroSection(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            siteContent.sections.hero.title = sanitizeInput(formData.get('title'));
+            siteContent.sections.hero.subtitle = sanitizeInput(formData.get('subtitle'));
+            siteContent.sections.hero.careerBtnText = sanitizeInput(formData.get('careerBtnText'));
+            siteContent.sections.hero.contactBtnText = sanitizeInput(formData.get('contactBtnText'));
+
+            await saveContent('Hero section updated successfully');
+        }
+
+        async function saveAboutSection(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            siteContent.sections.about.title = sanitizeInput(formData.get('title'));
+            siteContent.sections.about.content = sanitizeInput(formData.get('content'));
+
+            await saveContent('About section updated successfully');
+        }
+
+        async function saveContactInfo(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            siteContent.sections.contact.title = sanitizeInput(formData.get('title'));
+            siteContent.sections.contact.subtitle = sanitizeInput(formData.get('subtitle'));
+            siteContent.sections.contact.info.email = sanitizeInput(formData.get('email'));
+            siteContent.sections.contact.info.phone = sanitizeInput(formData.get('phone'));
+            siteContent.sections.contact.info.location = sanitizeInput(formData.get('location'));
+
+            await saveContent('Contact information updated successfully');
+        }
+
+        async function saveContent(successMessage) {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/update-content`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(siteContent)
+                });
+
+                if (!response.ok) throw new Error('Failed to save content');
+                
+                showNotification(successMessage, 'success');
+            } catch (error) {
+                showNotification('Failed to save content', 'error');
+            }
+        }
+
+        // Career management
+        async function addCareerItem(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const careerItem = {
+                id: Date.now().toString(),
+                title: sanitizeInput(formData.get('title')),
+                description: sanitizeInput(formData.get('description')),
+                date: sanitizeInput(formData.get('date'))
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/career`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(careerItem)
+                });
+
+                if (!response.ok) throw new Error('Failed to add career item');
+                
+                showNotification('Career item added successfully', 'success');
+                e.target.reset();
+                loadCareerItems();
+                loadStats();
+            } catch (error) {
+                showNotification('Failed to add career item', 'error');
+            }
+        }
+
+        async function loadCareerItems() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/career`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load career items');
+                
+                const careers = await response.json();
+                renderCareerList(careers);
+            } catch (error) {
+                document.getElementById('career-list').innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load career items.</p>';
+            }
+        }
+
+        function renderCareerList(careers) {
+            const careerList = document.getElementById('career-list');
+            
+            if (careers.length === 0) {
+                careerList.innerHTML = '<p style="text-align: center; color: #6b7280;">No career items</p>';
+                return;
+            }
+
+            careerList.innerHTML = careers.map(career => `
+                <div class="career-item">
+                    <div>
+                        <strong>${career.title}</strong><br>
+                        <small style="color: #6b7280;">${career.date}</small>
+                    </div>
+                    <div>
+                        <button class="btn btn-danger btn-small" onclick="deleteCareerItem('${career.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteCareerItem(id) {
+            if (!confirm('Are you sure you want to delete this career item?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/career/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to delete career item');
+                
+                showNotification('Career item deleted successfully', 'success');
+                loadCareerItems();
+                loadStats();
+            } catch (error) {
+                showNotification('Failed to delete career item', 'error');
+            }
+        }
+
+        // Social links management
+        async function saveSocialLink(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const socialLink = {
+                id: formData.get('id') || Date.now().toString(),
+                platform: formData.get('platform'),
+                url: sanitizeInput(formData.get('url'))
+            };
+
+            const method = socialLink.id === formData.get('id') ? 'PUT' : 'POST';
+            const url = method === 'PUT' ? `${API_BASE}/api/admin/social-links/${socialLink.id}` : `${API_BASE}/api/admin/social-links`;
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(socialLink)
+                });
+
+                if (!response.ok) throw new Error(method === 'PUT' ? 'Failed to update social link' : 'Failed to add social link');
+                
+                showNotification(method === 'PUT' ? 'Social link updated successfully' : 'Social link added successfully', 'success');
+                e.target.reset();
+                document.getElementById('social-submit-btn').textContent = 'Add Social Link';
+                loadSocialLinks();
+            } catch (error) {
+                showNotification(error.message, 'error');
+            }
+        }
+
+        async function loadSocialLinks() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/social-links`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load social links');
+                
+                const socialLinks = await response.json();
+                renderSocialLinksList(socialLinks);
+            } catch (error) {
+                document.getElementById('social-links-list').innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load social links.</p>';
+            }
+        }
+
+        function renderSocialLinksList(socialLinks) {
+            const socialLinksList = document.getElementById('social-links-list');
+            
+            if (socialLinks.length === 0) {
+                socialLinksList.innerHTML = '<p style="text-align: center; color: #6b7280;">No social links</p>';
+                return;
+            }
+
+            socialLinksList.innerHTML = socialLinks.map(link => `
+                <div class="social-link-item">
+                    <div>
+                        <strong>${link.platform}</strong><br>
+                        <small style="color: #6b7280;">${link.url}</small>
+                    </div>
+                    <div>
+                        <button class="btn btn-success btn-small" onclick="editSocialLink('${link.id}', '${link.platform}', '${link.url}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="deleteSocialLink('${link.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editSocialLink(id, platform, url) {
+            document.getElementById('social-id').value = id;
+            document.getElementById('social-platform').value = platform;
+            document.getElementById('social-url').value = url;
+            document.getElementById('social-submit-btn').textContent = 'Update Social Link';
+        }
+
+        async function deleteSocialLink(id) {
+            if (!confirm('Are you sure you want to delete this social link?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/social-links/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to delete social link');
+                
+                showNotification('Social link deleted successfully', 'success');
+                loadSocialLinks();
+            } catch (error) {
+                showNotification('Failed to delete social link', 'error');
+            }
+        }
+
+        // File management
+        async function loadFiles() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/files`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load files');
+                
+                const files = await response.json();
+                renderFileList(files);
+            } catch (error) {
+                document.getElementById('file-list').innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load files</p>';
+            }
+        }
+
+        function renderFileList(files) {
+            const fileList = document.getElementById('file-list');
+            
+            if (files.length === 0) {
+                fileList.innerHTML = '<p style="text-align: center; color: #6b7280;">No files uploaded</p>';
+                return;
+            }
+
+            fileList.innerHTML = files.map(file => `
+                <div class="file-item">
+                    <div>
+                        <strong>${sanitizeInput(file.filename)}</strong><br>
+                        <small style="color: #6b7280;">${formatFileSize(file.size)}</small>
+                    </div>
+                    <div>
+                        <button class="btn btn-danger btn-small" onclick="deleteFile('${file.filename}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteFile(filename) {
+            if (!confirm('Are you sure you want to delete this file?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/files`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ filename })
+                });
+
+                if (!response.ok) throw new Error('Failed to delete file');
+                
+                showNotification('File deleted successfully', 'success');
+                loadFiles();
+                loadStats();
+            } catch (error) {
+                showNotification('Failed to delete file', 'error');
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleFileDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            uploadFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            uploadFiles(e.target.files);
+        }
+
+        async function uploadFiles(files) {
+            for (let file of files) {
+                if (!file.type.startsWith('image/')) {
+                    showNotification(`File ${file.name} is not an image`, 'error');
+                    continue;
+                }
+                await uploadFile(file);
+            }
+            loadFiles();
+            loadStats();
+        }
+
+        async function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/upload`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${authToken}` },
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Failed to upload file');
+                
+                showNotification(`${sanitizeInput(file.name)} uploaded successfully`, 'success');
+            } catch (error) {
+                showNotification(`Failed to upload ${sanitizeInput(file.name)}`, 'error');
+            }
+        }
+
+        // Contact management
+        async function saveContactMessage(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const contact = {
+                id: formData.get('id') || Date.now().toString(),
+                name: sanitizeInput(formData.get('name')),
+                email: sanitizeInput(formData.get('email')),
+                subject: sanitizeInput(formData.get('subject')),
+                message: sanitizeInput(formData.get('message')),
+                timestamp: formData.get('id') ? formData.get('timestamp') : new Date().toISOString(),
+                read: false
+            };
+
+            const method = contact.id === formData.get('id') ? 'PUT' : 'POST';
+            const url = method === 'PUT' ? `${API_BASE}/api/admin/contact/${contact.id}` : `${API_BASE}/api/admin/contacts`;
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(contact)
+                });
+
+                if (!response.ok) throw new Error(method === 'PUT' ? 'Failed to update contact' : 'Failed to add contact');
+                
+                showNotification(method === 'PUT' ? 'Contact updated successfully' : 'Contact added successfully', 'success');
+                e.target.reset();
+                document.getElementById('contact-submit-btn').textContent = 'Add Contact Message';
+                document.getElementById('contact-timestamp').value = '';
+                loadContacts();
+                loadStats();
+            } catch (error) {
+                showNotification(error.message, 'error');
+            }
+        }
+
+        async function loadContacts() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/contacts`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load contacts');
+                
+                const contacts = await response.json();
+                renderContactList(contacts);
+            } catch (error) {
+                document.getElementById('contact-list').innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load messages</p>';
+            }
+        }
+
+        function renderContactList(contacts) {
+            const contactList = document.getElementById('contact-list');
+            
+            if (contacts.length === 0) {
+                contactList.innerHTML = '<p style="text-align: center; color: #6b7280;">No messages received</p>';
+                return;
+            }
+
+            contactList.innerHTML = contacts.map(contact => `
+                <div class="contact-item ${!contact.read ? 'unread' : ''}">
+                    <div class="contact-header">
+                        <div class="contact-name">${sanitizeInput(contact.name)}</div>
+                        <div class="contact-date">${formatDate(contact.timestamp)}</div>
+                    </div>
+                    <div class="contact-subject">${sanitizeInput(contact.subject)}</div>
+                    <div class="contact-message">${sanitizeInput(contact.message)}</div>
+                    <div style="color: #6b7280; font-size: 0.875rem; margin-top: 0.5rem;">
+                        <i class="fas fa-envelope"></i> ${sanitizeInput(contact.email)}
+                    </div>
+                    <div class="contact-actions">
+                        <button class="btn btn-success btn-small" onclick="markContactRead('${contact.id}')">
+                            <i class="fas fa-check"></i> Mark Read
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="editContact('${contact.id}', '${sanitizeInput(contact.name)}', '${sanitizeInput(contact.email)}', '${sanitizeInput(contact.subject)}', '${sanitizeInput(contact.message)}', '${contact.timestamp}')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="deleteContact('${contact.id}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editContact(id, name, email, subject, message, timestamp) {
+            document.getElementById('contact-id').value = id;
+            document.getElementById('contact-name').value = name;
+            document.getElementById('contact-email-field').value = email;
+            document.getElementById('contact-subject').value = subject;
+            document.getElementById('contact-message-field').value = message;
+            document.getElementById('contact-timestamp').value = timestamp;
+            document.getElementById('contact-submit-btn').textContent = 'Update Contact Message';
+        }
+
+        async function markContactRead(id) {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/contact/${id}/read`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to mark contact as read');
+                
+                showNotification('Message marked as read', 'success');
+                loadContacts();
+                loadStats();
+            } catch (error) {
+                showNotification('Failed to mark message as read', 'error');
+            }
+        }
+
+        async function deleteContact(id) {
+            if (!confirm('Are you sure you want to delete this message?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/contact/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to delete contact');
+                
+                showNotification('Message deleted successfully', 'success');
+                loadContacts();
+                loadStats();
+            } catch (error) {
+                showNotification('Failed to delete message', 'error');
+            }
+        }
+
+        // Code management
+        async function loadIndexCode() {
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/get-index-code`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+        
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        document.getElementById('index-code').value = '';
+                        showNotification('Index code not found. Please create or upload the code.', 'error');
+                    } else {
+                        const errorText = await response.text();
+                        throw new Error(`Failed to load index code. Status: ${response.status} - ${errorText || 'Check backend implementation.'}`);
+                    }
+                } else {
+                    indexCode = await response.text();
+                    document.getElementById('index-code').value = indexCode || '';
+                    showNotification('Index code loaded successfully', 'success');
+                }
+            } catch (error) {
+                document.getElementById('index-code').value = '';
+                showNotification(error.message, 'error');
+            }
+        }
+
+        async function saveIndexCode(e) {
+            e.preventDefault();
+            const code = document.getElementById('index-code').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/update-index-code`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/html',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: code
+                });
+
+                if (!response.ok) throw new Error('Failed to save index code');
+                
+                indexCode = code;
+                showNotification('Index code saved successfully', 'success');
+            } catch (error) {
+                showNotification('Failed to save index code. Ensure backend supports this feature.', 'error');
+            }
+        }
+
+        async function deleteIndexCode() {
+            if (!confirm('Are you sure you want to delete the index.html code? This action cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/delete-index-code`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to delete index code');
+                
+                indexCode = null;
+                document.getElementById('index-code').value = '';
+                showNotification('Index code deleted successfully', 'success');
+            } catch (error) {
+                showNotification('Failed to delete index code. Ensure backend supports this feature.', 'error');
+            }
+        }
+
+        // Utility functions
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => notification.classList.remove('show'), 4000);
+        }
+
+        function formatFileSize(bytes) {
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            if (bytes === 0) return '0 Bytes';
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function exportContent() {
+            const dataStr = JSON.stringify(siteContent, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'portfolio-content.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        async function clearAllData() {
+            if (!confirm('Are you sure you want to delete ALL data? This action cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/clear-all`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to clear all data');
+
+                siteContent = null;
+                indexCode = null;
+                populateContentForms();
+                document.getElementById('index-code').value = '';
+                document.getElementById('career-list').innerHTML = '<p style="text-align: center; color: #6b7280;">No career items</p>';
+                document.getElementById('social-links-list').innerHTML = '<p style="text-align: center; color: #6b7280;">No social links</p>';
+                document.getElementById('file-list').innerHTML = '<p style="text-align: center; color: #6b7280;">No files uploaded</p>';
+                document.getElementById('contact-list').innerHTML = '<p style="text-align: center; color: #6b7280;">No messages received</p>';
+                loadStats();
+
+                showNotification('All data cleared successfully', 'success');
+            } catch (error) {
+                showNotification('Failed to clear all data. Ensure backend supports this feature.', 'error');
+            }
+        }
+
+        function previewContent() {
+            const previewWindow = window.open('', '_blank');
+            const fullHtml = indexCode || `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Preview - ${siteContent.siteTitle || 'Portfolio'}</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    <style>
+                        body { font-family: 'Inter', sans-serif; }
+                        .hero { text-align: center; padding: 2rem; }
+                        .hero-buttons a { background: #6f42c1; color: white; padding: 0.75rem 2rem; border-radius: 4px; text-decoration: none; margin: 0 0.5rem; }
+                        .hero-buttons a:hover { background: #5936a9; }
+                        .hero-social a { color: #6c757d; font-size: 1.5rem; margin: 0 0.75rem; }
+                        .hero-social a:hover { color: #6f42c1; }
+                        .section { padding: 2rem; }
+                        .career-grid { display: grid; gap: 1rem; }
+                        .career-item { background: #f8fafc; padding: 1rem; border-radius: 0.5rem; }
+                    </style>
+                </head>
+                <body>
+                    <section class="hero">
+                        <h1>${sanitizeInput(siteContent.sections.hero.title || '')}</h1>
+                        <p>${sanitizeInput(siteContent.sections.hero.subtitle || '')}</p>
+                        <div class="hero-buttons">
+                            <a href="#career">${sanitizeInput(siteContent.sections.hero.careerBtnText || '')}</a>
+                            <a href="#contact">${sanitizeInput(siteContent.sections.hero.contactBtnText || '')}</a>
+                        </div>
+                        <div class="hero-social">
+                            ${(siteContent.sections.socialLinks || []).map(link => `
+                                <a href="${sanitizeInput(link.url)}" target="_blank">
+                                    <i class="fab fa-${link.platform}"></i>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </section>
+                    <section id="about" class="section">
+                        <h2>${sanitizeInput(siteContent.sections.about.title || '')}</h2>
+                        <p>${sanitizeInput(siteContent.sections.about.content || '')}</p>
+                    </section>
+                    <section id="career" class="section">
+                        <h2>Career</h2>
+                        <div class="career-grid">
+                            ${(siteContent.sections.career || []).map(item => `
+                                <div class="career-item">
+                                    <h3>${sanitizeInput(item.title)}</h3>
+                                    <p>${sanitizeInput(item.description)}</p>
+                                    <small>${sanitizeInput(item.date)}</small>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+                    <section id="contact" class="section">
+                        <h2>${sanitizeInput(siteContent.sections.contact.title || '')}</h2>
+                        <p>${sanitizeInput(siteContent.sections.contact.subtitle || '')}</p>
+                        <p>Email: ${sanitizeInput(siteContent.sections.contact.info.email || '')}</p>
+                        <p>Phone: ${sanitizeInput(siteContent.sections.contact.info.phone || '')}</p>
+                        <p>Location: ${sanitizeInput(siteContent.sections.contact.info.location || '')}</p>
+                    </section>
+                </body>
+                </html>
+            `;
+            previewWindow.document.write(fullHtml);
+        }
+    </script>
+</body>
+</html>

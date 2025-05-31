@@ -1,0 +1,144 @@
+{
+  "siteTitle": "Shishir Kandel - Creative Graphic Designer",
+  "favicon": "favicon.ico",
+  "logo": "SK",
+  "theme": "light",
+  "navbar": {
+    "brand": "SK",
+    "links": [
+      {
+        "name": "Home",
+        "href": "#home"
+      },
+      {
+        "name": "About",
+        "href": "#about"
+      },
+      {
+        "name": "Career",
+        "href": "#career"
+      },
+      {
+        "name": "Contact",
+        "href": "#contact"
+      }
+    ]
+  },
+  "sections": {
+    "hero": {
+      "title": "Hi, I'm Shishir Kandel",
+      "subtitle": "Creative Graphic Designer crafting exceptional visual experiences with modern design tools and creative solutions",
+      "buttonText": "View My Work",
+      "buttonLink": "#about"
+    },
+    "about": {
+      "title": "About Me",
+      "content": "I'm a passionate graphic designer with extensive experience in creating compelling visual content that communicates ideas effectively. My journey in design started with a love for art and creativity, which evolved into a professional pursuit of visual excellence and brand storytelling.\n\nI specialize in Adobe Creative Suite, brand identity design, and digital marketing materials. When I'm not designing, you'll find me exploring new design trends, experimenting with different creative techniques, or helping businesses build their visual identity.",
+      "stats": [
+        {
+          "label": "Experience",
+          "value": "3+ Years"
+        },
+        {
+          "label": "Projects",
+          "value": "100+ Designs"
+        },
+        {
+          "label": "Location",
+          "value": "Bharatpur, Nepal"
+        },
+        {
+          "label": "Availability",
+          "value": "Open to Work"
+        }
+      ]
+    },
+    "career": {
+      "title": "Career Opportunities in Nepal",
+      "subtitle": "Explore different career paths in technology and digital fields with growth opportunities in Nepal",
+      "paths": [
+        {
+          "title": "Graphic Design",
+          "description": "Create visual content for digital and print media, including logos, brochures, advertisements, and brand identity materials.",
+          "skills": [
+            "Photoshop",
+            "Illustrator",
+            "InDesign",
+            "Typography",
+            "Color Theory",
+            "Branding"
+          ],
+          "salary": "Rs 25,000 - 80,000/month",
+          "timeToLearn": "6-12 months",
+          "icon": "fas fa-palette"
+        },
+        {
+          "title": "Web Development",
+          "description": "Build and maintain websites and web applications using programming languages and modern development frameworks.",
+          "skills": [
+            "HTML/CSS",
+            "JavaScript",
+            "React",
+            "Node.js",
+            "Databases",
+            "Git"
+          ],
+          "salary": "Rs 35,000 - 100,000/month",
+          "timeToLearn": "10-16 months",
+          "icon": "fas fa-code"
+        },
+        {
+          "title": "Digital Marketing",
+          "description": "Promote products and services through digital channels, including social media, search engines, and online advertising.",
+          "skills": [
+            "SEO",
+            "Social Media",
+            "Content Marketing",
+            "Google Ads",
+            "Analytics",
+            "Email Marketing"
+          ],
+          "salary": "Rs 20,000 - 70,000/month",
+          "timeToLearn": "4-8 months",
+          "icon": "fas fa-bullhorn"
+        }
+      ]
+    },
+    "contact": {
+      "title": "Get In Touch",
+      "subtitle": "Im always open to discussing new opportunities and interesting projects",
+      "info": {
+        "email": "shishirxkandel@gmail.com",
+        "phone": "+977 9848960699",
+        "location": "Bharatpur, Nepal"
+      },
+      "social": [
+        {
+          "name": "GitHub",
+          "url": "https://github.com/Shishirkdl",
+          "icon": "fab fa-github"
+        },
+        {
+          "name": "LinkedIn",
+          "url": "https://www.linkedin.com/in/shishirkandel/",
+          "icon": "fab fa-linkedin"
+        },
+        {
+          "name": "Facebook",
+          "url": "https://www.facebook.com/shishir.kandel.772476",
+          "icon": "fab fa-facebook"
+        },
+        {
+          "name": "Behance",
+          "url": "https://www.behance.net/theshishirkandel",
+          "icon": "fab fa-behance"
+        },
+        {
+          "name": "Instagram",
+          "url": "https://www.instagram.com/the_shishir.kandel/",
+          "icon": "fab fa-instagram"
+        }
+      ]
+    }
+  }
+}
