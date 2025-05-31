@@ -590,8 +590,12 @@
                 <div class="admin-grid">
                     <!-- Add Social Link -->
                     <div class="admin-card">
-                        <h3><i class="fas fa-link"></i> Add Social Link</h3>
+                        <h3><i class="fas fa-link"></i> Add/Update Social Link</h3>
                         <form id="social-form">
+                            <div class="form-group">
+                                <label for="social-id">Social Link ID (leave blank for new link)</label>
+                                <input type="text" id="social-id" name="id" readonly>
+                            </div>
                             <div class="form-group">
                                 <label for="social-platform">Platform</label>
                                 <select id="social-platform" name="platform" required>
@@ -607,7 +611,7 @@
                                 <label for="social-url">URL</label>
                                 <input type="url" id="social-url" name="url" required>
                             </div>
-                            <button type="submit" class="btn">Add Social Link</button>
+                            <button type="submit" class="btn" id="social-submit-btn">Add Social Link</button>
                         </form>
                     </div>
 
@@ -651,10 +655,45 @@
 
             <!-- Messages Tab -->
             <div id="contacts-tab" class="tab-content">
-                <div class="admin-card">
-                    <h3><i class="fas fa-envelope"></i> Contact Messages</h3>
-                    <div class="contact-list" id="contact-list">
-                        <p style="text-align: center; color: #6b7280;">Loading messages...</p>
+                <div class="admin-grid">
+                    <!-- Add/Edit Contact -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-envelope"></i> Add/Edit Contact Message</h3>
+                        <form id="contact-message-form">
+                            <div class="form-group">
+                                <label for="contact-id">Contact ID (leave blank for new message)</label>
+                                <input type="text" id="contact-id" name="id" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-name">Name</label>
+                                <input type="text" id="contact-name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">Email</label>
+                                <input type="email" id="contact-email-field" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-subject">Subject</label>
+                                <input type="text" id="contact-subject" name="subject" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message-field">Message</label>
+                                <textarea id="contact-message-field" name="message" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-timestamp">Timestamp</label>
+                                <input type="text" id="contact-timestamp" name="timestamp" readonly>
+                            </div>
+                            <button type="submit" class="btn" id="contact-submit-btn">Add Contact Message</button>
+                        </form>
+                    </div>
+
+                    <!-- Contact List -->
+                    <div class="admin-card">
+                        <h3><i class="fas fa-list"></i> Contact Messages</h3>
+                        <div class="contact-list" id="contact-list">
+                            <p style="text-align: center; color: #6b7280;">Loading messages...</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -711,9 +750,7 @@
         let failedLoginAttempts = 0;
         const MAX_LOGIN_ATTEMPTS = 5;
         const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes in milliseconds
-
-        // API Configuration
-        const API_BASE = window.location.origin;
+        const API_BASE = window.location.origin.replace(/:\d+/, ':5000'); // Adjust to match PORT=5000
 
         // Initialize admin panel
         document.addEventListener('DOMContentLoaded', function() {
@@ -760,8 +797,9 @@
             document.getElementById('about-form').addEventListener('submit', saveAboutSection);
             document.getElementById('contact-form').addEventListener('submit', saveContactInfo);
             document.getElementById('career-form').addEventListener('submit', addCareerItem);
-            document.getElementById('social-form').addEventListener('submit', addSocialLink);
+            document.getElementById('social-form').addEventListener('submit', saveSocialLink);
             document.getElementById('code-form').addEventListener('submit', saveIndexCode);
+            document.getElementById('contact-message-form').addEventListener('submit', saveContactMessage);
 
             // File upload
             const fileUpload = document.getElementById('file-upload');
@@ -807,9 +845,19 @@
                     body: JSON.stringify({ username, password })
                 });
 
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Invalid credentials');
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Unexpected response format: Server did not return JSON');
+                }
+
                 const result = await response.json();
 
-                if (response.ok) {
+                if (result.token) {
                     authToken = result.token;
                     localStorage.setItem('admin_token', authToken);
                     failedLoginAttempts = 0;
@@ -817,13 +865,13 @@
                     showNotification('Login successful', 'success');
                     startSessionTimeout();
                 } else {
-                    throw new Error(result.error || 'Invalid credentials');
+                    throw new Error('No token received from server');
                 }
             } catch (error) {
                 failedLoginAttempts++;
                 document.getElementById('login-error').textContent = error.message;
                 document.getElementById('login-error').classList.remove('hidden');
-                showNotification(error.message, 'error');
+                showNotification(error.message.includes('<!DOCTYPE') ? 'Server error: Unexpected HTML response. Please check backend configuration.' : error.message, 'error');
             }
         }
 
@@ -1063,14 +1111,12 @@
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
 
-                if (!response.ok) {
-                    throw new Error('Failed to load career items');
-                }
+                if (!response.ok) throw new Error('Failed to load career items');
                 
                 const careers = await response.json();
                 renderCareerList(careers);
             } catch (error) {
-                document.getElementById('career-list').innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load career items. <button class="btn btn-small btn-secondary" onclick="retryLoad(\'career\')">Retry</button></p>';
+                document.getElementById('career-list').innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load career items.</p>';
             }
         }
 
@@ -1117,18 +1163,21 @@
         }
 
         // Social links management
-        async function addSocialLink(e) {
+        async function saveSocialLink(e) {
             e.preventDefault();
             const formData = new FormData(e.target);
             const socialLink = {
-                id: Date.now().toString(),
+                id: formData.get('id') || Date.now().toString(),
                 platform: formData.get('platform'),
                 url: sanitizeInput(formData.get('url'))
             };
 
+            const method = socialLink.id === formData.get('id') ? 'PUT' : 'POST';
+            const url = method === 'PUT' ? `${API_BASE}/api/admin/social-links/${socialLink.id}` : `${API_BASE}/api/admin/social-links`;
+
             try {
-                const response = await fetch(`${API_BASE}/api/admin/social-links`, {
-                    method: 'POST',
+                const response = await fetch(url, {
+                    method: method,
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${authToken}`
@@ -1136,13 +1185,14 @@
                     body: JSON.stringify(socialLink)
                 });
 
-                if (!response.ok) throw new Error('Failed to add social link');
+                if (!response.ok) throw new Error(method === 'PUT' ? 'Failed to update social link' : 'Failed to add social link');
                 
-                showNotification('Social link added successfully', 'success');
+                showNotification(method === 'PUT' ? 'Social link updated successfully' : 'Social link added successfully', 'success');
                 e.target.reset();
+                document.getElementById('social-submit-btn').textContent = 'Add Social Link';
                 loadSocialLinks();
             } catch (error) {
-                showNotification('Failed to add social link', 'error');
+                showNotification(error.message, 'error');
             }
         }
 
@@ -1152,14 +1202,12 @@
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
 
-                if (!response.ok) {
-                    throw new Error('Failed to load social links');
-                }
+                if (!response.ok) throw new Error('Failed to load social links');
                 
                 const socialLinks = await response.json();
                 renderSocialLinksList(socialLinks);
             } catch (error) {
-                document.getElementById('social-links-list').innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load social links. <button class="btn btn-small btn-secondary" onclick="retryLoad(\'social\')">Retry</button></p>';
+                document.getElementById('social-links-list').innerHTML = '<p style="text-align: center; color: #ef4444;">Failed to load social links.</p>';
             }
         }
 
@@ -1178,12 +1226,22 @@
                         <small style="color: #6b7280;">${link.url}</small>
                     </div>
                     <div>
+                        <button class="btn btn-success btn-small" onclick="editSocialLink('${link.id}', '${link.platform}', '${link.url}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
                         <button class="btn btn-danger btn-small" onclick="deleteSocialLink('${link.id}')">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </div>
             `).join('');
+        }
+
+        function editSocialLink(id, platform, url) {
+            document.getElementById('social-id').value = id;
+            document.getElementById('social-platform').value = platform;
+            document.getElementById('social-url').value = url;
+            document.getElementById('social-submit-btn').textContent = 'Update Social Link';
         }
 
         async function deleteSocialLink(id) {
@@ -1314,6 +1372,45 @@
         }
 
         // Contact management
+        async function saveContactMessage(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const contact = {
+                id: formData.get('id') || Date.now().toString(),
+                name: sanitizeInput(formData.get('name')),
+                email: sanitizeInput(formData.get('email')),
+                subject: sanitizeInput(formData.get('subject')),
+                message: sanitizeInput(formData.get('message')),
+                timestamp: formData.get('id') ? formData.get('timestamp') : new Date().toISOString(),
+                read: false
+            };
+
+            const method = contact.id === formData.get('id') ? 'PUT' : 'POST';
+            const url = method === 'PUT' ? `${API_BASE}/api/admin/contact/${contact.id}` : `${API_BASE}/api/admin/contacts`;
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(contact)
+                });
+
+                if (!response.ok) throw new Error(method === 'PUT' ? 'Failed to update contact' : 'Failed to add contact');
+                
+                showNotification(method === 'PUT' ? 'Contact updated successfully' : 'Contact added successfully', 'success');
+                e.target.reset();
+                document.getElementById('contact-submit-btn').textContent = 'Add Contact Message';
+                document.getElementById('contact-timestamp').value = '';
+                loadContacts();
+                loadStats();
+            } catch (error) {
+                showNotification(error.message, 'error');
+            }
+        }
+
         async function loadContacts() {
             try {
                 const response = await fetch(`${API_BASE}/api/admin/contacts`, {
@@ -1352,12 +1449,25 @@
                         <button class="btn btn-success btn-small" onclick="markContactRead('${contact.id}')">
                             <i class="fas fa-check"></i> Mark Read
                         </button>
+                        <button class="btn btn-secondary btn-small" onclick="editContact('${contact.id}', '${sanitizeInput(contact.name)}', '${sanitizeInput(contact.email)}', '${sanitizeInput(contact.subject)}', '${sanitizeInput(contact.message)}', '${contact.timestamp}')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
                         <button class="btn btn-danger btn-small" onclick="deleteContact('${contact.id}')">
                             <i class="fas fa-trash"></i> Delete
                         </button>
                     </div>
                 </div>
             `).join('');
+        }
+
+        function editContact(id, name, email, subject, message, timestamp) {
+            document.getElementById('contact-id').value = id;
+            document.getElementById('contact-name').value = name;
+            document.getElementById('contact-email-field').value = email;
+            document.getElementById('contact-subject').value = subject;
+            document.getElementById('contact-message-field').value = message;
+            document.getElementById('contact-timestamp').value = timestamp;
+            document.getElementById('contact-submit-btn').textContent = 'Update Contact Message';
         }
 
         async function markContactRead(id) {
@@ -1402,16 +1512,23 @@
                 const response = await fetch(`${API_BASE}/api/admin/get-index-code`, {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
-
+        
                 if (!response.ok) {
-                    throw new Error('Failed to load index code');
+                    if (response.status === 404) {
+                        document.getElementById('index-code').value = '';
+                        showNotification('Index code not found. Please create or upload the code.', 'error');
+                    } else {
+                        const errorText = await response.text();
+                        throw new Error(`Failed to load index code. Status: ${response.status} - ${errorText || 'Check backend implementation.'}`);
+                    }
+                } else {
+                    indexCode = await response.text();
+                    document.getElementById('index-code').value = indexCode || '';
+                    showNotification('Index code loaded successfully', 'success');
                 }
-                
-                indexCode = await response.text();
-                document.getElementById('index-code').value = indexCode || 'No code available';
             } catch (error) {
-                document.getElementById('index-code').value = 'No code available. This feature is not implemented for safety reasons.';
-                showNotification('Failed to load index code. Check backend implementation.', 'error');
+                document.getElementById('index-code').value = '';
+                showNotification(error.message, 'error');
             }
         }
 
@@ -1506,7 +1623,6 @@
 
                 if (!response.ok) throw new Error('Failed to clear all data');
 
-                // Reset all data
                 siteContent = null;
                 indexCode = null;
                 populateContentForms();
@@ -1515,17 +1631,12 @@
                 document.getElementById('social-links-list').innerHTML = '<p style="text-align: center; color: #6b7280;">No social links</p>';
                 document.getElementById('file-list').innerHTML = '<p style="text-align: center; color: #6b7280;">No files uploaded</p>';
                 document.getElementById('contact-list').innerHTML = '<p style="text-align: center; color: #6b7280;">No messages received</p>';
-                loadStats(); // Update stats to reflect cleared data
+                loadStats();
 
                 showNotification('All data cleared successfully', 'success');
             } catch (error) {
                 showNotification('Failed to clear all data. Ensure backend supports this feature.', 'error');
             }
-        }
-
-        function retryLoad(section) {
-            if (section === 'career') loadCareerItems();
-            else if (section === 'social') loadSocialLinks();
         }
 
         function previewContent() {
